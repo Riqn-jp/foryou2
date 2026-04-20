@@ -117,6 +117,8 @@
 
     <div class="item"><label>ハーネス</label><select id="harness" onchange="calculateTotal()"><option value="0">なし</option><option value="3000000">あり</option></select></div>
 
+    <div class="item"><label>外装カスタム（1箇所 ¥300,000）</label><select id="exterior" onchange="calculateTotal()"><option value="0">0箇所</option><option value="300000">1箇所</option><option value="600000">2箇所</option><option value="900000">3箇所</option><option value="1200000">4箇所</option><option value="1500000">5箇所</option><option value="3000000">10箇所</option><option value="4500000">15箇所</option><option value="6000000">20箇所</option><option value="7500000">25箇所</option><option value="9000000">30箇所</option></select></div>
+
   </div>
 
   <button class="checkout" onclick="calculateTotal(false)">通常価格を計算</button>
@@ -127,7 +129,7 @@
 
   <script>
     function getIds() {
-      return ['engine','brakes','transmission','suspension','turbo','nitro','armor','harness'];
+      return ['engine','brakes','transmission','suspension','turbo','nitro','armor','harness','exterior'];
     }
 
     function calculateTotal(isPartnerDiscount = false) {
@@ -166,4 +168,3 @@
 
 </body>
 </html>
-
