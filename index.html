@@ -13,8 +13,8 @@
     }
 
     h1 {
-      background: #111;
-      color: white;
+      background: #93C47D;
+      color: rgb(0, 0, 0);
       padding: 15px;
       margin: 0;
     }
@@ -63,8 +63,8 @@
     button {
       border: none;
       border-radius: 8px;
-      background: #111;
-      color: white;
+      background: #93C47D;
+      color: rgb(0, 0, 0);
       cursor: pointer;
       padding: 10px 14px;
       font-size: 15px;
@@ -93,8 +93,8 @@
 <div class="box">
   <label>カラー選択</label>
   <select id="colorType" onchange="calculateTotal()">
-    <option value="white">白（半額）</option>
-    <option value="black">黒（通常）</option>
+    <option value="white">白</option>
+    <option value="black">黒</option>
   </select>
 </div>
 
@@ -117,16 +117,16 @@
   <div class="item"><label>ハーネス</label><select id="harness" onchange="calculateTotal()"><option value="0">なし</option><option value="3000000">あり</option></select></div>
 
   <div class="item">
-    <label>外装カスタム（1箇所 ¥300,000）</label>
+    <label>外装カスタム</label>
     <input type="number" id="exterior" min="0" max="30" value="0" onchange="calculateTotal()">
   </div>
 
 </div>
 
 <button class="checkout" onclick="calculateTotal(false)">通常価格を計算</button>
-<button class="checkout" onclick="calculateTotal(true)">提携先価格（2割引）を計算</button>
-<button class="checkout" onclick="confirmCheckout()">会計確定（保存＋リセット）</button>
-<button class="checkout" onclick="receiveSalary()">給料を受け取った（リセット）</button>
+<button class="checkout" onclick="calculateTotal(true)">提携先価格を計算</button>
+<button class="checkout" onclick="confirmCheckout()">会計確定</button>
+<button class="checkout" onclick="receiveSalary()">給料を受け取る</button>
 
 <div class="box result" id="result">合計金額：¥0</div>
 <div class="box result" id="salaryResult">未受取の給料合計：¥0</div>
