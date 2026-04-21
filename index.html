@@ -135,6 +135,7 @@
     }
 
     function calculateTotal(isPartnerDiscount = false) {
+      // 毎回最新の選択値から合計を再計算
       let total = 0;
 
       getIds().forEach(id => {
@@ -147,6 +148,10 @@
 
       if (document.getElementById('colorType').value === 'white') {
         total = Math.floor(total / 2);
+      }
+
+      if (isNaN(total)) {
+        total = 0;
       }
 
       total += exteriorTotal;
@@ -172,12 +177,7 @@
       document.getElementById('salaryResult').innerText =
         `未受取の給料合計：¥${newSalaryTotal.toLocaleString()}`;
 
-      alert("会計を確定しました。
-
-" + document.getElementById('result').innerText + "
-" + document.getElementById('salaryResult').innerText + "
-
-入力内容をリセットします。");
+      alert("会計を確定しました。" + document.getElementById('result').innerText + "" + document.getElementById('salaryResult').innerText + "入力内容をリセットします。");
 
       document.getElementById('colorType').value = 'white';
 
