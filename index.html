@@ -166,7 +166,10 @@
 
     function confirmCheckout() {
       const resultText = document.getElementById('result').innerText;
-      const amountOnly = Number(resultText.replace(/[^0-9]/g, '')) || 0;
+      const amountMatch = resultText.match(/¥([0-9,]+)/);
+      const amountOnly = amountMatch
+        ? Number(amountMatch[1].replace(/,/g, ''))
+        : 0;
       const salary = Math.floor(amountOnly * 0.3);
 
       const currentSalary = Number(localStorage.getItem('unpaidSalary') || 0);
