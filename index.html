@@ -139,12 +139,15 @@
         total += Number(document.getElementById(id).value);
       });
 
+      let exteriorTotal = 0;
       const exteriorCount = Number(document.getElementById('exterior').value) || 0;
-      total += exteriorCount * 300000;
+      exteriorTotal = exteriorCount * 300000;
 
       if (document.getElementById('colorType').value === 'white') {
         total = Math.floor(total / 2);
       }
+
+      total += exteriorTotal;
 
       if (isPartnerDiscount) {
         total = Math.floor(total * 0.8);
