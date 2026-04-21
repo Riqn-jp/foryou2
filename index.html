@@ -126,6 +126,8 @@
   <button class="checkout" onclick="confirmCheckout()">会計確定（リセット）</button>
 
   <div class="box result" id="result">合計金額：¥0</div>
+  <div class="box result" id="salaryResult">未受取の給料合計：¥0</div>
+  <button class="checkout" onclick="receiveSalary()">給料を受け取った（リセット）</button>
 
   <script>
     function getIds() {
@@ -158,7 +160,24 @@
     }
 
     function confirmCheckout() {
-      alert("会計を確定しました。入力内容をリセットします。\n\n" + document.getElementById('result').innerText);
+      const resultText = document.getElementById('result').innerText;
+      const amountOnly = Number(resultText.replace(/[^0-9]/g, '')) || 0;
+      const salary = Math.floor(amountOnly * 0.3);
+
+      const currentSalary = Number(localStorage.getItem('unpaidSalary') || 0);
+      const newSalaryTotal = currentSalary + salary;
+
+      localStorage.setItem('unpaidSalary', newSalaryTotal);
+
+      document.getElementById('salaryResult').innerText =
+        `未受取の給料合計：¥${newSalaryTotal.toLocaleString()}`;
+
+      alert("会計を確定しました。
+
+" + document.getElementById('result').innerText + "
+" + document.getElementById('salaryResult').innerText + "
+
+入力内容をリセットします。");
 
       document.getElementById('colorType').value = 'white';
 
@@ -168,7 +187,24 @@
 
       document.getElementById('exterior').value = '0';
 
-      calculateTotal(false);
+      const savedSalary = Number(localStorage.getItem('unpaidSalary') || 0);
+    document.getElementById('salaryResult').innerText =
+      `未受取の給料合計：¥${savedSalary.toLocaleString()}`;
+
+    calculateTotal(false);
+    }
+
+    function receiveSalary() {
+      const currentSalary = Number(localStorage.getItem('unpaidSalary') || 0);
+
+      if (currentSalary === 0) {
+        alert('受け取る給料がありません');
+        return;
+      }
+
+      alert(`給料 ¥${currentSalary.toLocaleString()} を受け取りました。`);
+      localStorage.setItem('unpaidSalary', 0);
+      document.getElementById('salaryResult').innerText = '未受取の給料合計：¥0';
     }
 
     calculateTotal(false);
