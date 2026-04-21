@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>メカニック価格計算表</title>
-
+  <title>メカニック価格計算表 完全版</title>
   <style>
     body {
       font-family: sans-serif;
@@ -24,26 +23,26 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      padding: 15px;
       gap: 10px;
+      padding: 15px;
+    }
+
+    .item, .box {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
 
     .item {
-      background: white;
-      padding: 15px;
-      border-radius: 12px;
       width: 220px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      padding: 15px;
     }
 
     .box {
-      background: white;
-      margin: 15px auto;
-      padding: 15px;
-      border-radius: 12px;
       width: 90%;
       max-width: 700px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 15px auto;
+      padding: 15px;
     }
 
     label {
@@ -52,33 +51,33 @@
       font-weight: bold;
     }
 
-    select {
+    select, input {
       width: 100%;
       padding: 10px;
-      border-radius: 8px;
       border: 1px solid #ccc;
+      border-radius: 8px;
       font-size: 15px;
+      box-sizing: border-box;
     }
 
     button {
-      font-size: 15px;
-      padding: 8px 12px;
-      margin: 4px;
       border: none;
       border-radius: 8px;
       background: #111;
       color: white;
       cursor: pointer;
+      padding: 10px 14px;
+      font-size: 15px;
+      margin: 5px;
     }
 
     .checkout {
-      background: #111;
-      font-size: 20px;
+      display: block;
       width: 90%;
       max-width: 700px;
-      margin: 15px auto;
-      display: block;
+      margin: 12px auto;
       padding: 14px;
+      font-size: 18px;
     }
 
     .result {
@@ -89,129 +88,133 @@
 </head>
 <body>
 
-  <h1>メカニック価格計算表</h1>
+<h1>メカニック価格計算表</h1>
 
-  <div class="box">
-    <label>カラー選択</label>
-    <select id="colorType" onchange="calculateTotal()">
-      <option value="white">白</option>
-      <option value="black">黒</option>
-    </select>
+<div class="box">
+  <label>カラー選択</label>
+  <select id="colorType" onchange="calculateTotal()">
+    <option value="white">白（半額）</option>
+    <option value="black">黒（通常）</option>
+  </select>
+</div>
+
+<div class="container">
+
+  <div class="item"><label>エンジン</label><select id="engine" onchange="calculateTotal()"><option value="0">なし</option><option value="4000000">Lv1</option><option value="8000000">Lv2</option><option value="12000000">Lv3</option><option value="14000000">Lv4</option><option value="18000000">Lv5</option></select></div>
+
+  <div class="item"><label>ブレーキ</label><select id="brakes" onchange="calculateTotal()"><option value="0">なし</option><option value="4000000">Lv1</option><option value="6000000">Lv2</option><option value="8000000">Lv3</option></select></div>
+
+  <div class="item"><label>トランスミッション</label><select id="transmission" onchange="calculateTotal()"><option value="0">なし</option><option value="2000000">Lv1</option><option value="4000000">Lv2</option><option value="6000000">Lv3</option><option value="8000000">Lv4</option></select></div>
+
+  <div class="item"><label>サスペンション</label><select id="suspension" onchange="calculateTotal()"><option value="0">なし</option><option value="2000000">Lv1</option><option value="4000000">Lv2</option><option value="6000000">Lv3</option><option value="8000000">Lv4</option></select></div>
+
+  <div class="item"><label>ターボ</label><select id="turbo" onchange="calculateTotal()"><option value="0">なし</option><option value="4000000">あり</option></select></div>
+
+  <div class="item"><label>ニトロ</label><select id="nitro" onchange="calculateTotal()"><option value="0">なし</option><option value="4000000">あり</option></select></div>
+
+  <div class="item"><label>アーマー</label><select id="armor" onchange="calculateTotal()"><option value="0">なし</option><option value="6000000">あり</option></select></div>
+
+  <div class="item"><label>ハーネス</label><select id="harness" onchange="calculateTotal()"><option value="0">なし</option><option value="3000000">あり</option></select></div>
+
+  <div class="item">
+    <label>外装カスタム（1箇所 ¥300,000）</label>
+    <input type="number" id="exterior" min="0" max="30" value="0" onchange="calculateTotal()">
   </div>
 
-  <div class="container">
+</div>
 
-    <div class="item"><label>エンジン</label><select id="engine" onchange="calculateTotal()"><option value="0">なし</option><option value="4000000">Lv1</option><option value="8000000">Lv2</option><option value="12000000">Lv3</option><option value="14000000">Lv4</option><option value="18000000">Lv5</option></select></div>
+<button class="checkout" onclick="calculateTotal(false)">通常価格を計算</button>
+<button class="checkout" onclick="calculateTotal(true)">提携先価格（2割引）を計算</button>
+<button class="checkout" onclick="confirmCheckout()">会計確定（保存＋リセット）</button>
+<button class="checkout" onclick="receiveSalary()">給料を受け取った（リセット）</button>
 
-    <div class="item"><label>ブレーキ</label><select id="brakes" onchange="calculateTotal()"><option value="0">なし</option><option value="4000000">Lv1</option><option value="6000000">Lv2</option><option value="8000000">Lv3</option></select></div>
+<div class="box result" id="result">合計金額：¥0</div>
+<div class="box result" id="salaryResult">未受取の給料合計：¥0</div>
 
-    <div class="item"><label>トランスミッション</label><select id="transmission" onchange="calculateTotal()"><option value="0">なし</option><option value="2000000">Lv1</option><option value="4000000">Lv2</option><option value="6000000">Lv3</option><option value="8000000">Lv4</option></select></div>
+<script>
+function partIds() {
+  return [
+    'engine','brakes','transmission','suspension',
+    'turbo','nitro','armor','harness'
+  ];
+}
 
-    <div class="item"><label>サスペンション</label><select id="suspension" onchange="calculateTotal()"><option value="0">なし</option><option value="2000000">Lv1</option><option value="4000000">Lv2</option><option value="6000000">Lv3</option><option value="8000000">Lv4</option></select></div>
+function getCurrentTotal(isPartnerDiscount = false) {
+  let total = 0;
 
-    <div class="item"><label>ターボ</label><select id="turbo" onchange="calculateTotal()"><option value="0">なし</option><option value="4000000">あり</option></select></div>
+  partIds().forEach(id => {
+    total += Number(document.getElementById(id).value || 0);
+  });
 
-    <div class="item"><label>ニトロ</label><select id="nitro" onchange="calculateTotal()"><option value="0">なし</option><option value="4000000">あり</option></select></div>
+  const exteriorCount = Number(document.getElementById('exterior').value || 0);
+  total += exteriorCount * 300000;
 
-    <div class="item"><label>アーマー</label><select id="armor" onchange="calculateTotal()"><option value="0">なし</option><option value="6000000">あり</option></select></div>
+  if (document.getElementById('colorType').value === 'white') {
+    total = Math.floor(total / 2);
+  }
 
-    <div class="item"><label>ハーネス</label><select id="harness" onchange="calculateTotal()"><option value="0">なし</option><option value="3000000">あり</option></select></div>
+  if (isPartnerDiscount) {
+    total = Math.floor(total * 0.8);
+  }
 
-    <div class="item"><label>外装カスタム（1箇所 ¥300,000）</label><input type="number" id="exterior" min="0" max="30" value="0" onchange="calculateTotal()" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;font-size:15px;box-sizing:border-box;"></div>
+  return total;
+}
 
-  </div>
+function calculateTotal(isPartnerDiscount = false) {
+  const total = getCurrentTotal(isPartnerDiscount);
 
-  <button class="checkout" onclick="calculateTotal(false)">通常価格を計算</button>
-  <button class="checkout" onclick="calculateTotal(true)">提携先価格（2割引）を計算</button>
-  <button class="checkout" onclick="confirmCheckout()">会計確定（リセット）</button>
+  document.getElementById('result').innerText =
+    isPartnerDiscount
+      ? `提携先価格（2割引）：¥${total.toLocaleString()}`
+      : `合計金額：¥${total.toLocaleString()}`;
+}
 
-  <div class="box result" id="result">合計金額：¥0</div>
-  <div class="box result" id="salaryResult">未受取の給料合計：¥0</div>
-  <button class="checkout" onclick="receiveSalary()">給料を受け取った（リセット）</button>
+function updateSalaryDisplay() {
+  const savedSalary = Number(localStorage.getItem('unpaidSalary') || 0);
+  document.getElementById('salaryResult').innerText =
+    `未受取の給料合計：¥${savedSalary.toLocaleString()}`;
+}
 
-  <script>
-    function getIds() {
-      return ['engine','brakes','transmission','suspension','turbo','nitro','armor','harness'];
-    }
+function confirmCheckout() {
+  const resultText = document.getElementById('result').innerText;
+  const isPartner = resultText.includes('提携先価格');
 
-    function calculateTotal(isPartnerDiscount = false) {
-      // 毎回最新の選択値から合計を再計算
-      let total = 0;
+  const total = getCurrentTotal(isPartner);
+  const salary = Math.floor(total * 0.3);
 
-      getIds().forEach(id => {
-        total += Number(document.getElementById(id).value);
-      });
+  const currentSalary = Number(localStorage.getItem('unpaidSalary') || 0);
+  const newSalary = currentSalary + salary;
 
-      let exteriorTotal = 0;
-      const exteriorCount = Number(document.getElementById('exterior').value) || 0;
-      exteriorTotal = exteriorCount * 300000;
+  localStorage.setItem('unpaidSalary', newSalary);
+  updateSalaryDisplay();
 
-      if (document.getElementById('colorType').value === 'white') {
-        total = Math.floor(total / 2);
-      }
+  alert(`会計を確定しました。\n\n${resultText}\n給料（3割）：¥${salary.toLocaleString()}\n\n入力内容をリセットします。`);
 
-      if (isNaN(total)) {
-        total = 0;
-      }
+  document.getElementById('colorType').value = 'white';
+  partIds().forEach(id => {
+    document.getElementById(id).value = '0';
+  });
+  document.getElementById('exterior').value = '0';
 
-      total += exteriorTotal;
+  calculateTotal(false);
+}
 
-      if (isPartnerDiscount) {
-        total = Math.floor(total * 0.8);
-        document.getElementById('result').innerText = `提携先価格（2割引）：¥${total.toLocaleString()}`;
-      } else {
-        document.getElementById('result').innerText = `合計金額：¥${total.toLocaleString()}`;
-      }
-    }
+function receiveSalary() {
+  const currentSalary = Number(localStorage.getItem('unpaidSalary') || 0);
 
-    function confirmCheckout() {
-      const resultText = document.getElementById('result').innerText;
-      const amountMatch = resultText.match(/¥([0-9,]+)/);
-      const amountOnly = amountMatch
-        ? Number(amountMatch[1].replace(/,/g, ''))
-        : 0;
-      const salary = Math.floor(amountOnly * 0.3);
+  if (currentSalary <= 0) {
+    alert('受け取る給料がありません');
+    return;
+  }
 
-      const currentSalary = Number(localStorage.getItem('unpaidSalary') || 0);
-      const newSalaryTotal = currentSalary + salary;
+  alert(`給料 ¥${currentSalary.toLocaleString()} を受け取りました。`);
+  localStorage.setItem('unpaidSalary', 0);
+  updateSalaryDisplay();
+}
 
-      localStorage.setItem('unpaidSalary', newSalaryTotal);
-
-      document.getElementById('salaryResult').innerText =
-        `未受取の給料合計：¥${newSalaryTotal.toLocaleString()}`;
-
-      alert("会計を確定しました。" + document.getElementById('result').innerText + "" + document.getElementById('salaryResult').innerText + "入力内容をリセットします。");
-
-      document.getElementById('colorType').value = 'white';
-
-      getIds().forEach(id => {
-        document.getElementById(id).value = '0';
-      });
-
-      document.getElementById('exterior').value = '0';
-
-      const savedSalary = Number(localStorage.getItem('unpaidSalary') || 0);
-    document.getElementById('salaryResult').innerText =
-      `未受取の給料合計：¥${savedSalary.toLocaleString()}`;
-
-    calculateTotal(false);
-    }
-
-    function receiveSalary() {
-      const currentSalary = Number(localStorage.getItem('unpaidSalary') || 0);
-
-      if (currentSalary === 0) {
-        alert('受け取る給料がありません');
-        return;
-      }
-
-      alert(`給料 ¥${currentSalary.toLocaleString()} を受け取りました。`);
-      localStorage.setItem('unpaidSalary', 0);
-      document.getElementById('salaryResult').innerText = '未受取の給料合計：¥0';
-    }
-
-    calculateTotal(false);
-  </script>
+updateSalaryDisplay();
+calculateTotal(false);
+</script>
 
 </body>
 </html>
