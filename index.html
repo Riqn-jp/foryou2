@@ -1,1010 +1,962 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>inferno 価格計算</title>
-    <!-- 雰囲気抜群の洋風フォントをインポート -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FiveM Crafting & Inventory Guide</title>
+  <!-- Google Fonts: Zen Maru Gothic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+ 
+  <style>
+    /* ----------------------------------
+       カラー＆ベーススタイル
+    ---------------------------------- */
+    :root {
+      --bg-color: #f0f8ff;         /* アリスブルー */
+      --card-bg: #ffffff;          /* カード背景 */
+      --main-pink: #f8bbd0;        /* 薄ピンク */
+      --dark-pink: #ec407a;        /* 濃いピンク */
+      --main-blue: #b3e5fc;        /* 薄水色 */
+      --dark-blue: #0288d1;        /* 濃い水色 */
+      --text-main: #2c3e50;        /* メイン文字 */
+      --text-sub: #546e7a;         /* サブ文字 */
+      --ok-color: #2e7d32;         /* 成功緑 */
+      --short-color: #c62828;      /* 不足赤 */
+    }
 
-    <style>
-        /* --- 地獄のダーク＆クリムゾン・ラグジュアリーBARカラー --- */
-        :root {
-            --bg-color: #0d0d0d;          
-            --panel-bg: #1a1a1a;          
-            --inferno-red: #d32f2f;      
-            --inferno-hover: #f44336;    
-            --inferno-dark-red: #5f0909;  
-            --text-main: #e0e0e0;        
-            --text-sub: #cfd8dc;          
-            --border-color: #331111;      
-            --accent-gold: #ffb300;      
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Zen Maru Gothic', 'Hiragino Sans', sans-serif;
+    }
 
-        body {
-            /* 魅惑のダーク西洋フォント ＆ 雰囲気のある明朝・ゴシックブレンド */
-            font-family: 'Cinzel', 'Philosopher', 'Georgia', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding-bottom: 30px;
-            line-height: 1.6;
-            background-image: radial-gradient(circle at 50% 30%, #200404 0%, #0d0d0d 70%);
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-        h1 {
-            font-family: 'Cinzel', serif;
-            background: linear-gradient(135deg, #1a0202 0%, #0d0d0d 100%);
-            color: var(--inferno-red);
-            padding: 24px;
-            margin: 0;
-            font-size: 28px;
-            letter-spacing: 6px;
-            font-weight: 900;
-            text-align: center;
-            border-bottom: 3px double var(--inferno-dark-red);
-            text-shadow: 0 0 15px rgba(211, 47, 47, 0.6), 1px 1px 0px #000;
-        }
+    .container {
+      width: 100%;
+      max-width: 1000px;
+    }
 
-        .main-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-        @media (min-width: 900px) {
-            .main-wrapper {
-                grid-template-columns: 1.3fr 0.7fr;
-            }
-        }
+    header h1 {
+      font-size: 2.2rem;
+      color: #d81b60;
+      margin-bottom: 6px;
+      font-weight: 900;
+      text-shadow: 2px 2px 0px #fff;
+    }
 
-        /* 重厚感のある石造りのボックス */
-        .box {
-            background: var(--panel-bg);
-            padding: 24px;
-            border-radius: 16px;
-            border: 2px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            text-align: left;
-            box-sizing: border-box;
-        }
+    header p {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
 
-        .box-title {
-            font-family: 'Cinzel', 'Philosopher', serif;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--accent-gold);
-            letter-spacing: 2px;
-            margin-bottom: 16px;
-            border-bottom: 1px solid var(--inferno-dark-red);
-            padding-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    /* 👤 メンバー選択バー */
+    .user-select-bar {
+      background-color: #ffffff;
+      border: 3px dashed var(--main-pink);
+      border-radius: 16px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
 
-        .box-title::before {
-            content: "✦";
-            color: var(--inferno-red);
-        }
+    .user-select-bar label {
+      font-weight: 900;
+      color: #d81b60;
+      font-size: 1rem;
+    }
 
-        .admin-staff-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-        @media (min-width: 500px) {
-            .admin-staff-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
+    .user-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
 
-        .input-group {
-            display: flex;
-            gap: 6px;
-        }
+    .user-select-bar select {
+      border: 2px solid var(--main-pink);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
 
-        input[type="password"], input[type="text"], input[type="number"], select {
-            font-family: inherit;
-            font-size: 14px;
-            padding: 12px 14px;
-            background-color: #121212;
-            color: #ffffff;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            outline: none;
-            box-sizing: border-box;
-            transition: all 0.3s;
-        }
+    /* ボタン共通 */
+    .btn {
+      background-color: var(--main-pink);
+      color: #880e4f;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
 
-        input[type="password"]:focus, input[type="text"]:focus, input[type="number"]:focus, select:focus {
-            border-color: var(--inferno-red);
-            background-color: #181818;
-            box-shadow: 0 0 10px rgba(211, 47, 47, 0.4);
-        }
+    .btn:hover {
+      background-color: var(--dark-pink);
+      color: #fff;
+    }
 
-        #adminStatus {
-            font-size: 11px;
-            color: var(--inferno-red);
-            display: block;
-            margin-top: 5px;
-            font-weight: bold;
-        }
+    .btn-blue {
+      background-color: var(--main-blue);
+      color: var(--dark-blue);
+    }
+    .btn-blue:hover {
+      background-color: var(--dark-blue);
+      color: #fff;
+    }
 
-        /* カテゴリタブ：シックな黒赤タブ */
-        .tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
+    .btn-danger {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    .btn-danger:hover {
+      background-color: #e53935;
+      color: #fff;
+    }
 
-        .tabs button {
-            font-family: inherit;
-            flex: 1;
-            min-width: 100px;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            background: #151515;
-            color: #888888;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
+    /* メインモード切り替えバー */
+    .mode-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
 
-        .tabs button.active {
-            background: linear-gradient(135deg, var(--inferno-dark-red) 0%, #3a0303 100%);
-            color: #ffcccc;
-            border-color: var(--inferno-red);
-            box-shadow: 0 0 12px rgba(211, 47, 47, 0.3);
-        }
+    .mode-btn {
+      flex: 1;
+      background-color: #ffffff;
+      border: 3px solid var(--main-blue);
+      color: var(--dark-blue);
+      padding: 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 1rem;
+      text-align: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
 
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
-            padding: 0;
-        }
+    .mode-btn.active {
+      background-color: var(--main-pink);
+      color: #880e4f;
+      border-color: var(--dark-pink);
+    }
 
-        /* メニューカード */
-        .item {
-            background: #181818;
-            padding: 20px;
-            border: 2px solid var(--border-color);
-            border-radius: 14px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-        }
+    /* カテゴリーフィルタタブ */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
 
-        .item:hover {
-            border-color: var(--inferno-red);
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(211, 47, 47, 0.25);
-            background: #1d1414;
-        }
+    .tab-btn {
+      flex: 1;
+      min-width: 80px;
+      background-color: #ffffff;
+      border: 2px solid var(--main-blue);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      text-align: center;
+      font-size: 0.85rem;
+    }
 
-        .item-name {
-            font-size: 16px;
-            font-weight: bold;
-            text-align: left;
-            margin-bottom: 6px;
-            color: #ffffff;
-            letter-spacing: 1px;
-            padding-right: 30px;
-        }
+    .tab-btn.active {
+      background-color: var(--dark-pink);
+      color: #ffffff;
+      border-color: var(--dark-pink);
+    }
 
-        .price {
-            font-family: 'Cinzel', serif;
-            color: var(--accent-gold);
-            font-weight: bold;
-            font-size: 16px;
-            text-align: left;
-            margin-bottom: 16px;
-        }
+    /* レイアウト */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 20px;
+    }
 
-        /* ミニ削除ボタン（管理者用） */
-        .btn-delete-item {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #2a0808;
-            color: #ff5252;
-            border: 1px solid #d32f2f;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            transition: all 0.2s;
-        }
+    .grid-3col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.2fr;
+      gap: 16px;
+    }
 
-        .btn-delete-item:hover {
-            background: var(--inferno-red);
-            color: white;
-            transform: scale(1.1);
-        }
+    @media (max-width: 850px) {
+      .grid-2col, .grid-3col { grid-template-columns: 1fr; }
+      .user-select-bar { flex-direction: column; align-items: stretch; }
+    }
 
-        /* 数量コントロール */
-        .controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border: 2px solid var(--border-color);
-            background: #101010;
-            padding: 6px;
-            border-radius: 10px;
-        }
+    .card {
+      background-color: var(--card-bg);
+      border: 3px solid var(--main-blue);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+      margin-bottom: 20px;
+    }
 
-        .qty {
-            font-family: 'Cinzel', serif;
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
-            display: inline-block;
-            width: 45px;
-            text-align: center;
-        }
+    .card h2 {
+      font-size: 1.2rem;
+      color: var(--dark-blue);
+      margin-bottom: 16px;
+      border-bottom: 3px dashed var(--main-pink);
+      padding-bottom: 6px;
+      font-weight: 900;
+    }
 
-        button {
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: none;
-            font-family: inherit;
-        }
+    /* 分類（カテゴリー）表示用バッジ */
+    .category-badge {
+      display: inline-block;
+      background-color: var(--main-pink);
+      color: #880e4f;
+      font-size: 0.85rem;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
 
-        button:active {
-            transform: scale(0.95);
-        }
+    .input-group {
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .box button, .input-group button {
-            padding: 10px 18px;
-            background: linear-gradient(135deg, var(--inferno-dark-red) 0%, #b71c1c 100%);
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 13px;
-            border-radius: 8px;
-            border: 1px solid var(--inferno-red);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .box button:hover, .input-group button:hover {
-            background: linear-gradient(135deg, #b71c1c 0%, var(--inferno-hover) 100%);
-            box-shadow: 0 0 10px rgba(211, 47, 47, 0.4);
-        }
+    .input-group label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
 
-        .btn-qty {
-            font-family: 'Cinzel', serif;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 8px 10px;
-            background: #1e1e1e;
-            color: #aaaaaa;
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
-        }
+    select, input[type="text"], input[type="number"] {
+      background-color: #f9fbfd;
+      border: 2px solid #b0bec5;
+      color: var(--text-main);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      outline: none;
+    }
 
-        .btn-qty:hover {
-            color: #ffffff;
-            background: var(--inferno-dark-red);
-            border-color: var(--inferno-red);
-        }
+    select:focus, input:focus {
+      border-color: var(--dark-pink);
+      background-color: #fff;
+    }
 
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    /* クラフト表示 */
+    .ingredient-list { list-style: none; }
+    .ingredient-item {
+      background-color: #f4fbfd;
+      border: 2px solid var(--main-blue);
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border-left: 6px solid var(--dark-pink);
+    }
 
-        /* 🧹 RESET ALL ボタン */
-        .btn-clear-sidebar {
-            background: #1a0a0a;
-            color: #d32f2f;
-            border: 2px dashed #b71c1c;
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: all 0.2s;
-            width: 100%;
-            box-sizing: border-box;
-            text-align: center;
-        }
+    .ingredient-main {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 900;
+      font-size: 1rem;
+    }
 
-        .btn-clear-sidebar:hover {
-            background: #3a1010;
-            border-style: solid;
-            color: #ff8a80;
-            transform: translateY(-1px);
-        }
+    .ingredient-status {
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed #cfd8dc;
+    }
 
-        /* 合計金額表示 */
-        .totalBox {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 2px solid var(--inferno-red);
-            background: linear-gradient(135deg, #2a0a0a 0%, #121212 100%);
-            border-radius: 16px;
-            box-shadow: 0 0 15px rgba(211, 47, 47, 0.2);
-        }
+    .stock-ok { color: var(--ok-color); }
+    .stock-short { color: var(--short-color); }
 
-        .total-label {
-            font-family: 'Cinzel', serif;
-            font-size: 13px;
-            letter-spacing: 2px;
-            color: var(--accent-gold);
-            font-weight: bold;
-        }
+    /* インベントリ */
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
 
-        .total-price-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .inv-item {
+      background-color: #ffffff;
+      border: 2px solid var(--main-blue);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-        .total-price {
-            font-family: 'Cinzel', serif;
-            color: #ffffff;
-            font-size: 32px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255,255,255,0.2);
-        }
+    /* レシピ作成用素材行 */
+    .recipe-ing-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
 
-        /* 決済ボタン */
-        .checkout {
-            font-family: 'Cinzel', 'Philosopher', serif;
-            background: linear-gradient(135deg, #b71c1c 0%, #3e0606 100%);
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            width: 100%;
-            padding: 18px;
-            border-radius: 16px;
-            border: 1px solid var(--inferno-red);
-            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
-        }
+    /* データ一覧表示テーブル */
+    .data-list {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .data-list th, .data-list td {
+      border: 1px solid var(--main-blue);
+      padding: 8px;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    .data-list th {
+      background-color: #f4fbfd;
+      color: var(--dark-blue);
+    }
 
-        .checkout:hover {
-            background: linear-gradient(135deg, var(--inferno-hover) 0%, #5c0d0d 100%);
-            box-shadow: 0 0 20px rgba(211, 47, 47, 0.6);
-        }
-
-        .sales-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .sales-val {
-            font-family: 'Cinzel', serif;
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--accent-gold);
-            margin-top: 4px;
-        }
-
-        #ranking {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .rank-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 14px;
-            background: #141414;
-            border-radius: 10px;
-            border: 1.5px solid var(--border-color);
-        }
-       
-        .rank-item:nth-child(1) {
-            background: #251010;
-            border-color: var(--inferno-red);
-            box-shadow: 0 0 8px rgba(211, 47, 47, 0.2);
-        }
-
-        .rank-name {
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        .rank-amount {
-            font-family: 'Cinzel', serif;
-            color: var(--accent-gold);
-            font-weight: bold;
-        }
-
-        /* --- 管理者用エリア --- */
-        .admin-log-area {
-            max-height: 240px;
-            overflow-y: auto;
-            border: 1.5px solid var(--border-color);
-            background: #101010;
-            border-radius: 10px;
-            padding: 10px;
-        }
-
-        .log-item {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            font-size: 13px;
-            padding: 10px 4px;
-            border-bottom: 1px dashed var(--border-color);
-        }
-
-        .log-info {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .log-btns {
-            display: flex;
-            justify-content: flex-end;
-            gap: 6px;
-        }
-
-        .btn-admin-action {
-            padding: 6px 12px !important;
-            font-size: 12px !important;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-        .btn-edit {
-            background: #1b2621 !important;
-            color: #a5d6a7 !important;
-            border: 1px solid #2e7d32 !important;
-        }
-        .btn-edit:hover { background: #2e7d32 !important; color: #fff !important;}
-       
-        .btn-delete {
-            background: #2d181b !important;
-            color: #ef9a9a !important;
-            border: 1px solid #c62828 !important;
-        }
-        .btn-delete:hover { background: #c62828 !important; color: #fff !important;}
-       
-        .btn-override {
-            background: transparent !important;
-            color: var(--accent-gold) !important;
-            border: 1.5px solid var(--accent-gold) !important;
-            padding: 4px 10px;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 6px;
-        }
-        .btn-override:hover { background: rgba(255, 179, 0, 0.1) !important; }
-
-        /* 商品管理フォーム */
-        .manage-form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        @media (min-width: 600px) {
-            .manage-form-grid {
-                grid-template-columns: 1.2fr 1.5fr 1fr 1fr;
-            }
-        }
-    </style>
+    .hidden { display: none !important; }
+    .empty-msg { color: var(--text-sub); font-size: 0.9rem; font-weight: 700; text-align: center; padding: 20px 0; }
+  </style>
 </head>
-
 <body>
 
-    <h1>✦ INFERNO SYSTEM ✦</h1>
+  <div class="container">
+    <header>
+      <h1>🎀 Custom Craft & Inventory 🎀</h1>
+      <p>自由に追加・編集できる素材 ＆ クラフト管理ツール</p>
+    </header>
 
-    <div class="main-wrapper">
-
-        <!-- 左側メインエリア -->
-        <div>
-            <!-- 管理・スタッフ選択 -->
-            <div class="box admin-staff-grid" style="margin-bottom: 20px;">
-                <div>
-                    <div class="box-title">ADMIN LOGIN (管理者用)</div>
-                    <div class="input-group" id="adminInputGroup">
-                        <input type="password" id="adminPass" placeholder="パスワードを入力">
-                        <button onclick="adminLogin()">ログイン</button>
-                    </div>
-                    <div id="adminActiveGroup" style="display: none; gap: 5px;">
-                        <button onclick="adminLogout()" style="background:var(--inferno-dark-red); color:#ffffff; width:100%; border: 1px solid var(--inferno-red);">LOGOUT (管理者ログアウト)</button>
-                    </div>
-                    <span id="adminStatus"></span>
-                </div>
-                <div>
-                    <div class="box-title">STAFF (担当スタッフ)</div>
-                    <select id="staff">
-                        <option>スタッフ選択</option>
-                        <option>ハイド</option>
-                        <option>ナイン</option>
-                        <option>蓮</option>
-                        <option>ひなた</option>
-                        <option>かいと</option>
-                        <option>7</option>
-                        <option>天月</option>
-                        <option>りん</option>
-                        <option>ココノエユウカ</option>
-                        <option>ヒイラギべに</option>
-                        <option>こう</option>
-                        <option>唯乃</option>
-                        <option>レッド・タンジェリン</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- 🛠️ 管理者用の「商品追加＆設定」パネル -->
-            <div class="box" id="adminItemManager" style="display: none; margin-bottom: 20px; border-style: dashed; border-color: var(--inferno-red);">
-                <div class="box-title" style="color: var(--accent-gold);">ITEM EDITOR (商品追加・編集)</div>
-                <div class="manage-form-grid">
-                    <select id="newCategory">
-                        <option value="30">30%回復</option>
-                        <option value="50">50%回復</option>
-                        <option value="white">白</option>
-                        <option value="event">イベント</option>
-                    </select>
-                    <input type="text" id="newItemName" placeholder="商品名を入力">
-                    <input type="number" id="newItemPrice" placeholder="価格（円）" min="0">
-                    <button onclick="addNewItem()">商品を追加する ✦</button>
-                </div>
-                <div style="margin-top: 15px; display: flex; gap: 10px;">
-                    <button onclick="exportItemsCode()" style="background: var(--inferno-dark-red); border-color: var(--inferno-red);">GitHub貼り付け用コードをコピーする</button>
-                    <button onclick="resetItemsToDefault()" style="background: #2a0a0a; color: #ff8a80; border: 1.5px solid #d32f2f;">商品をすべて初期値にリセット</button>
-                </div>
-            </div>
-
-            <!-- カテゴリタブ -->
-            <div class="tabs" id="tabContainer">
-                <button id="tab-30" onclick="changeTab('30')" class="active">30%回復</button>
-                <button id="tab-50" onclick="changeTab('50')">50%回復</button>
-                <button id="tab-white" onclick="changeTab('white')">白</button>
-                <button id="tab-event" onclick="changeTab('event')">イベント</button>
-            </div>
-
-            <div id="shop" class="container"></div>
-        </div>
-
-        <!-- 右側メインエリア（サイドバー） -->
-        <div class="sidebar">
-            <!-- 合計金額 -->
-            <div class="box totalBox">
-                <span class="total-label">TOTAL (合計金額)</span>
-                <div class="total-price-wrapper">
-                    <button id="btnOverrideTotal" class="btn-override" style="display: none;" onclick="overrideTotal()">金額変更</button>
-                    <span><span id="total" class="total-price">0</span> <span style="font-size: 13px; color: var(--text-main); font-weight: bold;">円</span></span>
-                </div>
-            </div>
-
-            <!-- 🧹 ALL CLEARボタン -->
-            <button class="btn-clear-sidebar" onclick="clearAllItems()">RESET ALL 🧹 (選択クリア)</button>
-
-            <!-- 決済実行 -->
-            <button class="checkout" onclick="checkout()">CHECKOUT (会計実行) ✦</button>
-
-            <!-- 売上集計 -->
-            <div class="box">
-                <div class="box-title">SALES REPORT (売上集計)</div>
-                <div class="sales-grid">
-                    <div>
-                        <div style="font-size:12px; color:#aaaaaa; letter-spacing:1px; font-weight: bold;">TODAY (本日売上)</div>
-                        <div class="sales-val"><span id="todaySales">0</span> 円</div>
-                    </div>
-                    <div>
-                        <div style="font-size:12px; color:#aaaaaa; letter-spacing:1px; font-weight: bold;">WEEKLY (週間売上)</div>
-                        <div class="sales-val"><span id="weekSales">0</span> 円</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 売上順位 -->
-            <div class="box">
-                <div class="box-title">STAFF RANKING (スタッフ売上順位)</div>
-                <div id="ranking"></div>
-            </div>
-
-            <!-- 管理者専用履歴修正エリア -->
-            <div class="box" id="adminLogBox" style="display: none;">
-                <div class="box-title" style="color: var(--inferno-red);">HISTORY LOG (本日分売上履歴・修正)</div>
-                <div class="admin-log-area" id="logList"></div>
-            </div>
-        </div>
-
+    <!-- 👤 メンバー選択バー -->
+    <div class="user-select-bar">
+      <label for="current-user-select">👤 選択中のメンバー:</label>
+      <div class="user-controls">
+        <select id="current-user-select"></select>
+        <button class="btn" id="btn-add-user">＋ メンバー追加</button>
+        <button class="btn btn-danger" id="btn-delete-user">削除</button>
+      </div>
     </div>
 
-    <script>
-        let ADMIN_PASSWORD = "イズミーランド";
-        let isAdmin = false;
-        let currentTab = "30";
-        let isTotalOverridden = false;
-        let overriddenTotalValue = 0;
+    <!-- メインモード切り替えバー -->
+    <div class="mode-bar">
+      <button class="mode-btn active" id="btn-mode-craft">🔨 クラフト計算</button>
+      <button class="mode-btn" id="btn-mode-inventory">📦 手持ち在庫</button>
+      <button class="mode-btn" id="btn-mode-settings">⚙️ 設定（分類・素材・レシピ）</button>
+    </div>
 
-        // ★ 初期データ
-        const DEFAULT_ITEMS = [
-            { name: "オニポテ", price: 80000, qty: 0, tab: "30" },
-            { name: "DROP OF THE DEVIL", price: 80000, qty: 0, tab: "30" },
+    <!-- ==================== モード1: クラフト画面 ==================== -->
+    <div id="section-craft">
+      <!-- カテゴリー絞り込みタブ -->
+      <nav class="tab-bar" id="category-tab-bar"></nav>
 
-            { name: "h666", price: 120000, qty: 0, tab: "50" },
-            { name: "DIABLE ROUGE", price: 120000, qty: 0, tab: "50" },
-            { name: "ローストビーフ", price: 120000, qty: 0, tab: "50" },
-            { name: "LILITH FROST", price: 120000, qty: 0, tab: "50" },
+      <main class="grid-2col">
+        <section class="card">
+          <h2>アイテム選択</h2>
+         
+          <!-- ★ アイテム上の分類（カテゴリー）表示エリア ★ -->
+          <div>
+            <span class="category-badge" id="selected-item-category">分類: 未選択</span>
+          </div>
 
-            { name: "オニポテ(白)", price: 40000, qty: 0, tab: "white" },
-            { name: "DROP OF THE DEVIL(白)", price: 40000, qty: 0, tab: "white" },
-            { name: "ローストビーフ(白)", price: 60000, qty: 0, tab: "white" },
-            { name: "h666(白)", price: 60000, qty: 0, tab: "white" },
-            { name: "DIABLE ROUGE(白)", price: 60000, qty: 0, tab: "white" },
-            { name: "LILITH FROST(白)", price: 60000, qty: 0, tab: "white" },
+          <div class="input-group">
+            <label for="item-select">クラフトするアイテム</label>
+            <select id="item-select"></select>
+          </div>
+          <div class="input-group">
+            <label for="item-count">作成個数</label>
+            <input type="number" id="item-count" value="1" min="1" max="99">
+          </div>
+        </section>
 
-            { name: "イベント商品", price: 200000, qty: 0, tab: "event" }
-        ];
+        <section class="card">
+          <h2>必要素材リスト</h2>
+          <ul id="ingredient-list" class="ingredient-list"></ul>
+        </section>
+      </main>
+    </div>
 
-        let items = [];
-        function loadItems() {
-            let saved = localStorage.getItem("shop_items");
-            if (saved) {
-                items = JSON.parse(saved);
-                items.forEach(i => i.qty = 0);
-            } else {
-                items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
-            }
-        }
+    <!-- ==================== モード2: インベントリ画面 ==================== -->
+    <div id="section-inventory" class="hidden">
+      <section class="card">
+        <h2>📦 所持素材の入力 (<span id="inv-user-name-display" style="color: #d81b60;">-</span>)</h2>
+        <div id="inventory-container" class="inventory-grid"></div>
+      </section>
+    </div>
 
-        function saveItems() {
-            localStorage.setItem("shop_items", JSON.stringify(items));
-        }
+    <!-- ==================== モード3: 設定画面 ==================== -->
+    <div id="section-settings" class="hidden">
+      <main class="grid-3col">
+       
+        <!-- 🏷️ 1. 分類（カテゴリー）設定 -->
+        <div>
+          <section class="card">
+            <h2>🏷️ 分類の追加</h2>
+            <div class="input-group">
+              <label>分類名</label>
+              <input type="text" id="new-cat-name" placeholder="例: 犯罪素材, 武器">
+            </div>
+            <button class="btn btn-blue" id="btn-add-category" style="width: 100%;">分類を登録</button>
+          </section>
 
-        function format(num) {
-            return num.toLocaleString("ja-JP");
-        }
+          <section class="card">
+            <h2>📋 登録済み分類</h2>
+            <div style="max-height: 200px; overflow-y: auto;">
+              <table class="data-list">
+                <thead>
+                  <tr><th>分類名</th><th>操作</th></tr>
+                </thead>
+                <tbody id="category-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
 
-        function adminLogin() {
-            let pass = document.getElementById("adminPass").value;
-            if (pass === ADMIN_PASSWORD) {
-                isAdmin = true;
-                document.getElementById("adminStatus").textContent = "管理者認証に成功しました";
-                document.getElementById("adminInputGroup").style.display = "none";
-                document.getElementById("adminActiveGroup").style.display = "flex";
-                document.getElementById("adminLogBox").style.display = "block";
-                document.getElementById("btnOverrideTotal").style.display = "block";
-                document.getElementById("adminItemManager").style.display = "block";
-                render();
-                updateSales();
-            } else {
-                alert("パスワードが違います");
-            }
-        }
+        <!-- 🧪 2. 素材設定 -->
+        <div>
+          <section class="card">
+            <h2>🧪 素材の追加</h2>
+            <div class="input-group">
+              <label>素材名</label>
+              <input type="text" id="new-mat-name" placeholder="例: 鉄くず">
+            </div>
+            <div class="input-group">
+              <label>入手場所</label>
+              <input type="text" id="new-mat-loc" placeholder="例: スクラップ工場">
+            </div>
+            <button class="btn btn-blue" id="btn-add-material" style="width: 100%;">素材を登録</button>
+          </section>
 
-        function adminLogout() {
-            isAdmin = false;
-            document.getElementById("adminPass").value = "";
-            document.getElementById("adminStatus").textContent = "";
-            document.getElementById("adminInputGroup").style.display = "flex";
-            document.getElementById("adminActiveGroup").style.display = "none";
-            document.getElementById("adminLogBox").style.display = "none";
-            document.getElementById("btnOverrideTotal").style.display = "none";
-            document.getElementById("adminItemManager").style.display = "none";
-            render();
-            updateSales();
-        }
+          <section class="card">
+            <h2>📋 登録済み素材</h2>
+            <div style="max-height: 200px; overflow-y: auto;">
+              <table class="data-list">
+                <thead>
+                  <tr><th>素材名</th><th>操作</th></tr>
+                </thead>
+                <tbody id="material-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
 
-        function addNewItem() {
-            let name = document.getElementById("newItemName").value.trim();
-            let price = parseInt(document.getElementById("newItemPrice").value, 10);
-            let tab = document.getElementById("newCategory").value;
-
-            if (!name) {
-                alert("商品名を入力してください。");
-                return;
-            }
-            if (isNaN(price) || price < 0) {
-                alert("正しい価格を入力してください。");
-                return;
-            }
-
-            items.push({
-                name: name,
-                price: price,
-                qty: 0,
-                tab: tab
-            });
-
-            saveItems();
-            render();
-
-            document.getElementById("newItemName").value = "";
-            document.getElementById("newItemPrice").value = "";
-            alert(`「${name}」を商品リストに追加しました！`);
-        }
-
-        function deleteItem(index) {
-            let item = items[index];
-            if (!confirm(`本当に商品「${item.name}」をリストから削除しますか？`)) return;
+        <!-- 🔨 3. レシピ設定 -->
+        <div>
+          <section class="card">
+            <h2>🔨 レシピの追加</h2>
+            <div class="input-group">
+              <label>完成アイテム名</label>
+              <input type="text" id="new-recipe-name" placeholder="例: ロックピック">
+            </div>
+            <div class="input-group">
+              <label>分類（カテゴリー）</label>
+              <select id="new-recipe-category"></select>
+            </div>
            
-            items.splice(index, 1);
-            saveItems();
-            render();
+            <label style="font-size: 0.9rem; font-weight: 700;">必要素材</label>
+            <div id="recipe-ing-inputs" style="margin-top: 6px; margin-bottom: 12px;"></div>
+            <button class="btn" id="btn-add-ing-row" style="font-size: 0.8rem; margin-bottom: 14px;">＋ 必要素材の行を追加</button>
+
+            <button class="btn btn-blue" id="btn-add-recipe" style="width: 100%;">レシピを登録</button>
+          </section>
+
+          <section class="card">
+            <h2>📜 登録済みレシピ</h2>
+            <div style="max-height: 200px; overflow-y: auto;">
+              <table class="data-list">
+                <thead>
+                  <tr><th>アイテム</th><th>分類</th><th>操作</th></tr>
+                </thead>
+                <tbody id="recipe-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+      </main>
+    </div>
+
+  </div>
+
+  <script>
+    /* ----------------------------------
+       データ管理 (LocalStorage)
+    ---------------------------------- */
+    let categories = JSON.parse(localStorage.getItem("custom_craft_categories")) || ["未分類"];
+    let materials = JSON.parse(localStorage.getItem("custom_craft_materials")) || {};
+    let recipes = JSON.parse(localStorage.getItem("custom_craft_recipes")) || [];
+    let membersData = JSON.parse(localStorage.getItem("custom_craft_members")) || { "自分": {} };
+    let currentUserName = localStorage.getItem("custom_craft_current_user") || "自分";
+
+    if (!membersData[currentUserName]) {
+      currentUserName = Object.keys(membersData)[0] || "自分";
+    }
+
+    function saveData() {
+      localStorage.setItem("custom_craft_categories", JSON.stringify(categories));
+      localStorage.setItem("custom_craft_materials", JSON.stringify(materials));
+      localStorage.setItem("custom_craft_recipes", JSON.stringify(recipes));
+      localStorage.setItem("custom_craft_members", JSON.stringify(membersData));
+      localStorage.setItem("custom_craft_current_user", currentUserName);
+    }
+
+    /* ----------------------------------
+       DOM要素取得
+    ---------------------------------- */
+    let currentCategoryFilter = "ALL";
+
+    const userSelect = document.getElementById("current-user-select");
+    const btnAddUser = document.getElementById("btn-add-user");
+    const btnDeleteUser = document.getElementById("btn-delete-user");
+
+    const btnModeCraft = document.getElementById("btn-mode-craft");
+    const btnModeInventory = document.getElementById("btn-mode-inventory");
+    const btnModeSettings = document.getElementById("btn-mode-settings");
+
+    const sectionCraft = document.getElementById("section-craft");
+    const sectionInventory = document.getElementById("section-inventory");
+    const sectionSettings = document.getElementById("section-settings");
+
+    const categoryTabBar = document.getElementById("category-tab-bar");
+    const selectedItemCategory = document.getElementById("selected-item-category");
+    const itemSelect = document.getElementById("item-select");
+    const itemCount = document.getElementById("item-count");
+    const ingredientList = document.getElementById("ingredient-list");
+    const inventoryContainer = document.getElementById("inventory-container");
+    const invUserNameDisplay = document.getElementById("inv-user-name-display");
+
+    // 設定要素 (分類)
+    const newCatName = document.getElementById("new-cat-name");
+    const btnAddCategory = document.getElementById("btn-add-category");
+    const categoryTableBody = document.getElementById("category-table-body");
+
+    // 設定要素 (素材)
+    const newMatName = document.getElementById("new-mat-name");
+    const newMatLoc = document.getElementById("new-mat-loc");
+    const btnAddMaterial = document.getElementById("btn-add-material");
+    const materialTableBody = document.getElementById("material-table-body");
+
+    // 設定要素 (レシピ)
+    const newRecipeName = document.getElementById("new-recipe-name");
+    const newRecipeCategory = document.getElementById("new-recipe-category");
+    const recipeIngInputs = document.getElementById("recipe-ing-inputs");
+    const btnAddIngRow = document.getElementById("btn-add-ing-row");
+    const btnAddRecipe = document.getElementById("btn-add-recipe");
+    const recipeTableBody = document.getElementById("recipe-table-body");
+
+    /* ----------------------------------
+       初期化
+    ---------------------------------- */
+    function init() {
+      // モード切り替えイベント
+      btnModeCraft.addEventListener("click", () => switchMode("craft"));
+      btnModeInventory.addEventListener("click", () => switchMode("inventory"));
+      btnModeSettings.addEventListener("click", () => switchMode("settings"));
+
+      // メンバー管理
+      btnAddUser.addEventListener("click", addUser);
+      btnDeleteUser.addEventListener("click", deleteUser);
+      userSelect.addEventListener("change", (e) => {
+        currentUserName = e.target.value;
+        saveData();
+        refreshAllUI();
+      });
+
+      // クラフト計算
+      itemSelect.addEventListener("change", updateCraftView);
+      itemCount.addEventListener("input", updateCraftView);
+
+      // 設定イベント
+      btnAddCategory.addEventListener("click", addCategory);
+      btnAddMaterial.addEventListener("click", addMaterial);
+      btnAddIngRow.addEventListener("click", () => createRecipeIngRow());
+      btnAddRecipe.addEventListener("click", addRecipe);
+
+      renderUserSelect();
+      createRecipeIngRow();
+      refreshAllUI();
+    }
+
+    function switchMode(mode) {
+      [btnModeCraft, btnModeInventory, btnModeSettings].forEach(b => b.classList.remove("active"));
+      [sectionCraft, sectionInventory, sectionSettings].forEach(s => s.classList.add("hidden"));
+
+      if (mode === "craft") {
+        btnModeCraft.classList.add("active");
+        sectionCraft.classList.remove("hidden");
+        updateCraftView();
+      } else if (mode === "inventory") {
+        btnModeInventory.classList.add("active");
+        sectionInventory.classList.remove("hidden");
+        renderInventoryUI();
+      } else if (mode === "settings") {
+        btnModeSettings.classList.add("active");
+        sectionSettings.classList.remove("hidden");
+        renderSettingsUI();
+      }
+    }
+
+    function refreshAllUI() {
+      invUserNameDisplay.textContent = currentUserName;
+      renderCategoryTabs();
+      renderItemSelectOptions();
+      updateCraftView();
+      renderInventoryUI();
+      renderSettingsUI();
+    }
+
+    /* ----------------------------------
+       メンバー管理
+    ---------------------------------- */
+    function renderUserSelect() {
+      userSelect.innerHTML = "";
+      Object.keys(membersData).forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        if (name === currentUserName) opt.selected = true;
+        userSelect.appendChild(opt);
+      });
+    }
+
+    function addUser() {
+      const name = prompt("追加するメンバーの名前を入力してください:");
+      if (name && name.trim()) {
+        const cleanName = name.trim();
+        if (!membersData[cleanName]) {
+          membersData[cleanName] = {};
+          currentUserName = cleanName;
+          saveData();
+          renderUserSelect();
+          refreshAllUI();
+        } else {
+          alert("その名前はすでに存在します。");
         }
+      }
+    }
 
-        function resetItemsToDefault() {
-            if (!confirm("商品リストをすべてデフォルトの初期設定に戻しますか？\n(これまで手動で追加・削除した設定は消去されます)")) return;
-            localStorage.removeItem("shop_items");
-            loadItems();
-            render();
-            alert("初期化に成功しました！");
-        }
+    function deleteUser() {
+      const keys = Object.keys(membersData);
+      if (keys.length <= 1) return alert("最後の1人は削除できません。");
+      if (confirm(`「${currentUserName}」さんを削除しますか？`)) {
+        delete membersData[currentUserName];
+        currentUserName = Object.keys(membersData)[0];
+        saveData();
+        renderUserSelect();
+        refreshAllUI();
+      }
+    }
 
-        function exportItemsCode() {
-            let cleanItems = items.map(i => {
-                return { name: i.name, price: i.price, qty: 0, tab: i.tab };
-            });
-            let codeString = JSON.stringify(cleanItems, null, 4);
-           
-            navigator.clipboard.writeText(codeString).then(() => {
-                alert("現在の設定コードをクリップボードにコピーしました！\nGitHubのHTMLファイルの「DEFAULT_ITEMS = [...]」の部分に貼り付けて保存（コミット）してください。");
-            }).catch(err => {
-                alert("コピーに失敗しました。");
-            });
-        }
+    /* ----------------------------------
+       クラフト計算 ＆ カテゴリー絞り込み
+    ---------------------------------- */
+    function renderCategoryTabs() {
+      categoryTabBar.innerHTML = "";
+     
+      const allBtn = document.createElement("button");
+      allBtn.className = `tab-btn ${currentCategoryFilter === 'ALL' ? 'active' : ''}`;
+      allBtn.textContent = "ALL";
+      allBtn.addEventListener("click", () => {
+        currentCategoryFilter = "ALL";
+        renderCategoryTabs();
+        renderItemSelectOptions();
+      });
+      categoryTabBar.appendChild(allBtn);
 
-        function clearAllItems() {
-            if (!confirm("現在選択しているすべての商品の数を「0」に戻しますか？")) return;
-            items.forEach(i => i.qty = 0);
-            isTotalOverridden = false;
-            render();
-        }
+      categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = `tab-btn ${currentCategoryFilter === cat ? 'active' : ''}`;
+        btn.textContent = cat;
+        btn.addEventListener("click", () => {
+          currentCategoryFilter = cat;
+          renderCategoryTabs();
+          renderItemSelectOptions();
+        });
+        categoryTabBar.appendChild(btn);
+      });
+    }
 
-        function changeTab(tab) {
-            currentTab = tab;
-            const buttons = document.querySelectorAll('.tabs button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            render();
-        }
+    function renderItemSelectOptions() {
+      itemSelect.innerHTML = "";
 
-        function render() {
-            const shop = document.getElementById("shop");
-            shop.innerHTML = "";
+      const filteredRecipes = recipes.map((r, originalIdx) => ({ ...r, originalIdx }))
+        .filter(r => currentCategoryFilter === "ALL" || r.category === currentCategoryFilter);
 
-            items.forEach((item, i) => {
-                if (item.tab !== currentTab) return;
+      if (filteredRecipes.length === 0) {
+        itemSelect.innerHTML = `<option value="">-- レシピがありません --</option>`;
+        selectedItemCategory.textContent = "分類: なし";
+        return;
+      }
 
-                let div = document.createElement("div");
-                div.className = "item";
+      filteredRecipes.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.originalIdx;
+        opt.textContent = r.name;
+        itemSelect.appendChild(opt);
+      });
 
-                let deleteButtonHTML = isAdmin
-                    ? `<button class="btn-delete-item" onclick="deleteItem(${i})">🗑️</button>`
-                    : "";
+      updateCraftView();
+    }
 
-                div.innerHTML = `
-                    ${deleteButtonHTML}
-                    <div class="item-name">${item.name}</div>
-                    <div class="price">${format(item.price)} 円</div>
-                    <div class="controls">
-                        <button class="btn-qty btn-minus" onclick="changeQty(${i},-10)">-10</button>
-                        <button class="btn-qty btn-minus" onclick="changeQty(${i},-1)">-1</button>
-                        <span class="qty">${item.qty}</span>
-                        <button class="btn-qty btn-plus" onclick="changeQty(${i},1)">+1</button>
-                        <button class="btn-qty btn-plus" onclick="changeQty(${i},10)">+10</button>
-                    </div>
-                `;
-                shop.appendChild(div);
-            });
+    function updateCraftView() {
+      ingredientList.innerHTML = "";
+      const idx = itemSelect.value;
 
-            updateTotal();
-        }
+      if (idx === "" || !recipes[idx]) {
+        ingredientList.innerHTML = `<li class="empty-msg">「設定」タブからレシピを登録してください。</li>`;
+        selectedItemCategory.textContent = "分類: なし";
+        return;
+      }
 
-        function changeQty(index, amount) {
-            isTotalOverridden = false;
-            items[index].qty += amount;
-            if (items[index].qty < 0) items[index].qty = 0;
-            render();
-        }
+      const recipe = recipes[idx];
+      selectedItemCategory.textContent = `分類: ${recipe.category || '未分類'}`;
 
-        function overrideTotal() {
-            let input = prompt("現在の合計金額をいくらに変更しますか？(半角数字)", "0");
-            if (input === null) return;
-            let val = parseInt(input, 10);
-            if (isNaN(val) || val < 0) {
-                alert("正しい数値を入力してください");
-                return;
-            }
-            isTotalOverridden = true;
-            overriddenTotalValue = val;
-            document.getElementById("total").textContent = format(val);
-        }
+      const count = parseInt(itemCount.value) || 1;
+      const userStock = membersData[currentUserName] || {};
 
-        function updateTotal() {
-            if (isTotalOverridden) return;
+      recipe.ingredients.forEach(ing => {
+        const totalReq = ing.amount * count;
+        const currentStock = userStock[ing.name] || 0;
+        const diff = currentStock - totalReq;
+        const isEnough = diff >= 0;
+        const loc = materials[ing.name] || "未登録";
 
-            let total = 0;
-            items.forEach(i => {
-                total += i.price * i.qty;
-            });
-            document.getElementById("total").textContent = format(total);
-        }
+        const li = document.createElement("li");
+        li.className = "ingredient-item";
+        li.innerHTML = `
+          <div class="ingredient-main">
+            <span>${ing.name}</span>
+            <span style="color: var(--dark-blue);">必要: x${totalReq}</span>
+          </div>
+          <div class="ingredient-status">
+            <span>${currentUserName}の所持: ${currentStock}個</span>
+            <span class="${isEnough ? 'stock-ok' : 'stock-short'}">
+              ${isEnough ? '✅ 作成可能' : `❌ 不足: ${Math.abs(diff)}個`}
+            </span>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-sub); margin-top: 4px;">📍 入手場所: ${loc}</div>
+        `;
+        ingredientList.appendChild(li);
+      });
+    }
 
-        function today() {
-            return new Date().toISOString().slice(0, 10);
-        }
+    /* ----------------------------------
+       インベントリ管理
+    ---------------------------------- */
+    function renderInventoryUI() {
+      inventoryContainer.innerHTML = "";
+      const matNames = Object.keys(materials);
 
-        function checkout() {
-            let total = 0;
-            if (isTotalOverridden) {
-                total = overriddenTotalValue;
-            } else {
-                items.forEach(i => {
-                    total += i.price * i.qty;
-                });
-            }
+      if (matNames.length === 0) {
+        inventoryContainer.innerHTML = `<div class="empty-msg" style="grid-column: 1/-1;">「設定」タブから素材を登録してください。</div>`;
+        return;
+      }
 
-            if (total === 0 && !confirm("0円で決済を実行しますか？")) {
-                return;
-            }
+      const userStock = membersData[currentUserName] || {};
 
-            let staff = document.getElementById("staff").value;
-            if (staff === "スタッフ選択") {
-                alert("担当スタッフを選択してください");
-                return;
-            }
+      matNames.forEach(matName => {
+        const stock = userStock[matName] || 0;
+        const loc = materials[matName];
 
-            let sales = JSON.parse(localStorage.getItem("sales") || "{}");
-            let t = today();
+        const card = document.createElement("div");
+        card.className = "inv-item";
+        card.innerHTML = `
+          <div style="font-weight: 900; color: var(--dark-blue);">${matName}</div>
+          <div style="font-size: 0.8rem; color: var(--text-sub);">📍 ${loc}</div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+            <label style="font-size: 0.85rem; font-weight: 700;">所持数:</label>
+            <input type="number" min="0" value="${stock}" style="width: 100%; text-align: right;">
+          </div>
+        `;
 
-            if (!sales[t]) sales[t] = [];
+        card.querySelector("input").addEventListener("input", (e) => {
+          const val = parseInt(e.target.value) || 0;
+          if (!membersData[currentUserName]) membersData[currentUserName] = {};
+          membersData[currentUserName][matName] = val;
+          saveData();
+        });
 
-            sales[t].push({
-                time: new Date().toLocaleTimeString(),
-                amount: total,
-                staff: staff
-            });
+        inventoryContainer.appendChild(card);
+      });
+    }
 
-            localStorage.setItem("sales", JSON.stringify(sales));
-           
-            items.forEach(i => i.qty = 0);
-            isTotalOverridden = false;
+    /* ----------------------------------
+       設定機能 (分類・素材・レシピ)
+    ---------------------------------- */
+    // 分類追加・削除
+    function addCategory() {
+      const name = newCatName.value.trim();
+      if (!name) return alert("分類名を入力してください。");
+      if (categories.includes(name)) return alert("すでに存在する分類です。");
 
-            render();
-            updateSales();
-        }
+      categories.push(name);
+      saveData();
+      newCatName.value = "";
+      refreshAllUI();
+    }
 
-        function updateSales() {
-            let sales = JSON.parse(localStorage.getItem("sales") || "{}");
-            let t = today();
-            let todayTotal = 0;
-            let weekTotal = 0;
-            let rank = {};
-            let now = new Date();
+    function deleteCategory(catName) {
+      if (confirm(`分類「${catName}」を削除しますか？`)) {
+        categories = categories.filter(c => c !== catName);
+        saveData();
+        refreshAllUI();
+      }
+    }
 
-            for (let i = 0; i < 7; i++) {
-                let d = new Date(now);
-                d.setDate(now.getDate() - i);
-                let key = d.toISOString().slice(0, 10);
+    // 素材追加・削除
+    function addMaterial() {
+      const name = newMatName.value.trim();
+      const loc = newMatLoc.value.trim() || "情報なし";
+      if (!name) return alert("素材名を入力してください。");
 
-                if (sales[key]) {
-                    sales[key].forEach(s => {
-                        weekTotal += s.amount;
-                        rank[s.staff] = (rank[s.staff] || 0) + s.amount;
-                    });
-                }
-            }
+      materials[name] = loc;
+      saveData();
+      newMatName.value = "";
+      newMatLoc.value = "";
+      refreshAllUI();
+    }
 
-            if (sales[t]) {
-                sales[t].forEach(s => todayTotal += s.amount);
-            }
+    function deleteMaterial(name) {
+      if (confirm(`素材「${name}」を削除しますか？`)) {
+        delete materials[name];
+        saveData();
+        refreshAllUI();
+      }
+    }
 
-            document.getElementById("todaySales").textContent = format(todayTotal);
-            document.getElementById("weekSales").textContent = format(weekTotal);
+    // レシピ素材行
+    function createRecipeIngRow() {
+      const div = document.createElement("div");
+      div.className = "recipe-ing-row";
+      let optionsHtml = Object.keys(materials).map(m => `<option value="${m}">${m}</option>`).join("");
+      if (!optionsHtml) optionsHtml = `<option value="">(素材未登録)</option>`;
 
-            renderRanking(rank);
-            if (isAdmin) {
-                renderLogList();
-            }
-        }
+      div.innerHTML = `
+        <select class="ing-select" style="flex: 2;">${optionsHtml}</select>
+        <input type="number" class="ing-amount" placeholder="個数" value="1" min="1" style="flex: 1;">
+        <button class="btn btn-danger" style="padding: 6px 10px;">✕</button>
+      `;
 
-        function renderLogList() {
-            let sales = JSON.parse(localStorage.getItem("sales") || "{}");
-            let t = today();
-            let listDiv = document.getElementById("logList");
-            listDiv.innerHTML = "";
+      div.querySelector(".btn-danger").addEventListener("click", () => div.remove());
+      recipeIngInputs.appendChild(div);
+    }
 
-            if (!sales[t] || sales[t].length === 0) {
-                listDiv.innerHTML = `<div style="color:#666; font-size:12px; text-align:center;">本日の売上履歴なし</div>`;
-                return;
-            }
+    // レシピ追加・削除
+    function addRecipe() {
+      const name = newRecipeName.value.trim();
+      const category = newRecipeCategory.value;
+      if (!name) return alert("完成アイテム名を入力してください。");
 
-            for (let i = sales[t].length - 1; i >= 0; i--) {
-                let item = sales[t][i];
-                let itemDiv = document.createElement("div");
-                itemDiv.className = "log-item";
-                itemDiv.innerHTML = `
-                    <div class="log-info">
-                        <span>[${item.time}] ${item.staff}</span>
-                        <span style="color: var(--accent-gold); font-weight:bold;">${format(item.amount)}円</span>
-                    </div>
-                    <div class="log-btns">
-                        <button class="btn-admin-action btn-edit" onclick="editLog(${i})">金額修正</button>
-                        <button class="btn-admin-action btn-delete" onclick="deleteLog(${i})">削除</button>
-                    </div>
-                `;
-                listDiv.appendChild(itemDiv);
-            }
-        }
+      const ingRows = recipeIngInputs.querySelectorAll(".recipe-ing-row");
+      const ingredients = [];
 
-        function editLog(index) {
-            let sales = JSON.parse(localStorage.getItem("sales") || "{}");
-            let t = today();
-            if (!sales[t] || !sales[t][index]) return;
-           
-            let currentAmount = sales[t][index].amount;
-            let input = prompt(`この売上の新しい金額を入力してください。\n現在の金額: ${currentAmount}円`, currentAmount);
-           
-            if (input === null) return;
-            let newAmount = parseInt(input, 10);
-            if (isNaN(newAmount) || newAmount < 0) {
-                alert("正しい数値を入力してください");
-                return;
-            }
-           
-            sales[t][index].amount = newAmount;
-            localStorage.setItem("sales", JSON.stringify(sales));
-            updateSales();
-        }
+      ingRows.forEach(row => {
+        const matName = row.querySelector(".ing-select").value;
+        const amount = parseInt(row.querySelector(".ing-amount").value) || 1;
+        if (matName) ingredients.push({ name: matName, amount });
+      });
 
-        function deleteLog(index) {
-            if (!confirm("この売上履歴を削除しますか？")) return;
-            let sales = JSON.parse(localStorage.getItem("sales") || "{}");
-            let t = today();
-            if (sales[t]) {
-                sales[t].splice(index, 1);
-                localStorage.setItem("sales", JSON.stringify(sales));
-                updateSales();
-            }
-        }
+      if (ingredients.length === 0) return alert("素材を1つ以上追加してください。");
 
-        function renderRanking(rank) {
-            let arr = Object.entries(rank);
-            arr.sort((a, b) => b[1] - a[1]);
+      recipes.push({ name, category, ingredients });
+      saveData();
 
-            let div = document.getElementById("ranking");
-            div.innerHTML = "";
+      newRecipeName.value = "";
+      recipeIngInputs.innerHTML = "";
+      createRecipeIngRow();
+      refreshAllUI();
+    }
 
-            if(arr.length === 0) {
-                div.innerHTML = `<div style="color: #666; font-size: 13px; text-align: center; padding: 10px;">売上データなし</div>`;
-                return;
-            }
+    function deleteRecipe(idx) {
+      if (confirm(`レシピ「${recipes[idx].name}」を削除しますか？`)) {
+        recipes.splice(idx, 1);
+        saveData();
+        refreshAllUI();
+      }
+    }
 
-            arr.forEach((r, idx) => {
-                let d = document.createElement("div");
-                d.className = "rank-item";
-                d.innerHTML = `
-                    <span class="rank-name">No.${idx + 1} ${r[0]}</span>
-                    <span class="rank-amount">${format(r[1])} 円</span>
-                `;
-                div.appendChild(d);
-            });
-        }
+    // 設定画面UI更新
+    function renderSettingsUI() {
+      // 分類テーブル
+      categoryTableBody.innerHTML = "";
+      categories.forEach(cat => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${cat}</strong></td>
+          <td><button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;">削除</button></td>
+        `;
+        tr.querySelector(".btn-danger").addEventListener("click", () => deleteCategory(cat));
+        categoryTableBody.appendChild(tr);
+      });
 
-        loadItems();
-        render();
-        updateSales();
-    </script>
+      // 素材テーブル
+      materialTableBody.innerHTML = "";
+      Object.keys(materials).forEach(name => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${name}</strong></td>
+          <td><button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;">削除</button></td>
+        `;
+        tr.querySelector(".btn-danger").addEventListener("click", () => deleteMaterial(name));
+        materialTableBody.appendChild(tr);
+      });
+
+      // レシピテーブル
+      recipeTableBody.innerHTML = "";
+      recipes.forEach((r, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${r.name}</strong></td>
+          <td><span style="font-size:0.75rem; background: var(--main-pink); padding: 2px 6px; border-radius: 6px;">${r.category || '未分類'}</span></td>
+          <td><button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;">削除</button></td>
+        `;
+        tr.querySelector(".btn-danger").addEventListener("click", () => deleteRecipe(idx));
+        recipeTableBody.appendChild(tr);
+      });
+
+      // レシピ登録フォーム内の分類プルダウン更新
+      newRecipeCategory.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join("");
+
+      // レシピ登録フォーム内の素材プルダウン更新
+      const selects = recipeIngInputs.querySelectorAll(".ing-select");
+      let optionsHtml = Object.keys(materials).map(m => `<option value="${m}">${m}</option>`).join("");
+      if (!optionsHtml) optionsHtml = `<option value="">(素材未登録)</option>`;
+
+      selects.forEach(sel => {
+        const curVal = sel.value;
+        sel.innerHTML = optionsHtml;
+        sel.value = curVal;
+      });
+    }
+
+    init();
+  </script>
 </body>
-
 </html>
